@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router'
 import Container from '@/shared/components/ui/Container.vue'
 import FeatureCard from '@/shared/components/ui/FeatureCard.vue'
 import StatCard from '@/shared/components/ui/StatCard.vue'
-import BackgroundCarousel from '@/shared/components/BackgroundCarousel.vue'
+import BackgroundCarousel from '@/shared/components/ui/BackgroundCarousel.vue'
 import { useImageCarousel } from '@/shared/composables/useImageCarousel'
 import {
   UsersIcon,
