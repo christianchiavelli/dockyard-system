@@ -75,9 +75,9 @@ const collapseEmployee = (employeeId: string): void => {
     }
 
     // Search recursively in children
-    // @ts-ignore - childRefs exists but is not in the type
+    // @ts-expect-error - childRefs exists but is not in the type
     if (nodeRef.childRefs) {
-      // @ts-ignore
+      // @ts-expect-error - childRefs array is not typed in InstanceType
       for (const childRef of nodeRef.childRefs) {
         if (findAndCollapse(childRef)) {
           return true
@@ -107,9 +107,9 @@ const collapseAll = (): void => {
     }
 
     // Recursively collapse all children
-    // @ts-ignore - childRefs exists but is not in the type
+    // @ts-expect-error - childRefs exists but is not in the type
     if (nodeRef.childRefs) {
-      // @ts-ignore
+      // @ts-expect-error - childRefs array is not typed in InstanceType
       for (const childRef of nodeRef.childRefs) {
         collapseRecursive(childRef)
       }

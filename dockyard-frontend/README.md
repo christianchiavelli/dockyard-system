@@ -39,6 +39,21 @@ npm run format    # Prettier
 npm run type-check # TypeScript type checking
 ```
 
+### Testing
+
+```bash
+npm run test           # Run tests in watch mode
+npm run test:ui        # Run tests with visual UI
+npm run test:run       # Run tests once (CI mode)
+npm run test:coverage  # Run tests with coverage report
+```
+
+**178 tests** across composables, stores, and critical components.  
+**87% code coverage** achieved by testing:
+- Business logic (composables): validation, drag-and-drop with cycle detection, formatting
+- State management (Pinia stores): CRUD operations, API integration, toast notifications
+- Critical components: EmployeeForm, CustomSelect, BaseDialog
+
 ## Tech Stack
 
 - Vue 3.5.22
