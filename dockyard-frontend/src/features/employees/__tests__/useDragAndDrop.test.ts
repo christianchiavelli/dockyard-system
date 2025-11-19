@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ref, type Ref } from 'vue'
-import { useDragAndDrop } from '../composables/useDragAndDrop'
+import { useDragAndDrop } from '@/features/employees/composables/useDragAndDrop'
 import type { Employee } from '@/features/employees/types/employee.types'
 
 describe('useDragAndDrop', () => {

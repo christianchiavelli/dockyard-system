@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { useEmployeeFormat } from '../composables/useEmployeeFormat'
+import { useEmployeeFormat } from '@/features/employees/composables/useEmployeeFormat'
 
 describe('useEmployeeFormat', () => {
   const { getInitials, getLevelLabel } = useEmployeeFormat()

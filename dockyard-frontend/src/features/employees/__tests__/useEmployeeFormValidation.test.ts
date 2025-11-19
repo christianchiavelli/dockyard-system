@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { useEmployeeFormValidation } from '../composables/useEmployeeFormValidation'
+import { useEmployeeFormValidation } from '@/features/employees/composables/useEmployeeFormValidation'
 
 describe('useEmployeeFormValidation', () => {
   let validation: ReturnType<typeof useEmployeeFormValidation>

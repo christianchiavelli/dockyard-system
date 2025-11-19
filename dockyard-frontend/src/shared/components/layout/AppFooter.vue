@@ -25,6 +25,14 @@ const currentYear = new Date().getFullYear()
             <ul class="space-y-2 text-sm">
               <li>
                 <router-link to="/" class="text-white/70 hover:text-brand-green transition-colors">
+                  Home
+                </router-link>
+              </li>
+              <li>
+                <router-link
+                  to="/hierarchy"
+                  class="text-white/70 hover:text-brand-green transition-colors"
+                >
                   Employees
                 </router-link>
               </li>

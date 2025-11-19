@@ -3,7 +3,7 @@ import { createPinia, setActivePinia } from 'pinia'
 
 import type { Employee } from '@/features/employees/types/employee.types'
 import { employeeApi } from '@/features/employees/employee-api.service'
-import { useEmployeeStore } from '../employee.store'
+import { useEmployeeStore } from '@/stores/employee.store'
 
 // Mock the API
 vi.mock('@/features/employees/employee-api.service', () => ({

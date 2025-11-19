@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import BaseDialog from '@/shared/components/ui/BaseDialog.vue'
-import type { Employee } from '../types/employee.types'
+import type { Employee } from '@/features/employees/types/employee.types'
 
 interface Props {
   open: boolean

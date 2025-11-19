@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import EmployeeNode from './EmployeeNode.vue'
+import EmployeeNode from '@/features/employees/components/EmployeeNode.vue'
 import type { Employee } from '@/features/employees/types/employee.types'
 
 interface Props {

@@ -42,6 +42,12 @@ lerna-debug.log*
 .env.production.local
 .env.local
 
+# Database
+database.sqlite
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
 # temp directory
 .temp
 .tmp
