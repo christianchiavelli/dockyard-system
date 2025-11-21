@@ -60,43 +60,6 @@ const expandPathToEmployee = async (targetId: string): Promise<void> => {
   }
 }
 
-// Function to collapse a specific employee
-const collapseEmployee = (employeeId: string): void => {
-  // Search for the employee in all nodes (recursively)
-  const findAndCollapse = (nodeRef: InstanceType<typeof EmployeeNode> | undefined): boolean => {
-    if (!nodeRef) return false
-
-    // If this is the target employee, collapse it
-    if (nodeRef.employee?.id === employeeId) {
-      if (nodeRef.collapse) {
-        nodeRef.collapse()
-      }
-      return true
-    }
-
-    // Search recursively in children
-    // @ts-expect-error - childRefs exists but is not in the type
-    if (nodeRef.childRefs) {
-      // @ts-expect-error - childRefs array is not typed in InstanceType
-      for (const childRef of nodeRef.childRefs) {
-        if (findAndCollapse(childRef)) {
-          return true
-        }
-      }
-    }
-
-    return false
-  }
-
-  // Try each root node
-  for (const rootNodeRef of rootNodeRefs.value) {
-    if (findAndCollapse(rootNodeRef)) {
-      break
-    }
-  }
-}
-
-// Function to collapse ALL employees
 const collapseAll = (): void => {
   const collapseRecursive = (nodeRef: InstanceType<typeof EmployeeNode> | undefined): void => {
     if (!nodeRef) return
@@ -127,7 +90,7 @@ const handleEdit = (employee: Employee) => emit('edit', employee)
 const handleAddSubordinate = (employee: Employee) => emit('addSubordinate', employee)
 const handleDelete = (employee: Employee) => emit('delete', employee)
 
-defineExpose({ expandPathToEmployee, collapseEmployee, collapseAll })
+defineExpose({ expandPathToEmployee, collapseAll })
 </script>
 
 <template>

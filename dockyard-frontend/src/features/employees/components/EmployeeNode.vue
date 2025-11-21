@@ -94,7 +94,7 @@ const {
 
 const { isHighlighted } = useEmployeeHighlight(employeeRef, scrollToIdRef, cardRef)
 
-const { getInitials, getLevelLabel } = useEmployeeFormat()
+const { getInitials, getLevelLabel, formatTimezone } = useEmployeeFormat()
 
 const { hasValidImage, imageLoadError, handleImageError } = useEmployeeImage(employeeRef)
 
@@ -129,8 +129,7 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
 
     <div
       ref="cardRef"
-      draggable="true"
-      class="relative rounded-xl transition-all duration-300 ease-in-out group select-none border-2 isolate cursor-grab active:cursor-grabbing"
+      class="relative rounded-xl transition-all duration-300 ease-in-out group select-none border-2 isolate"
       :class="[
         isHighlighted ? 'bg-brand-green/10 border-brand-green' : 'bg-white hover:bg-gray-50',
         matchesSearch ? 'bg-brand-green/10 border-brand-green' : '',
@@ -139,26 +138,23 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
         dragClasses,
       ]"
       :aria-label="`${employee.name}, ${employee.title}`"
-      role="button"
-      tabindex="0"
-      @dragstart="(e) => emit('dragStart', employee, e as DragEvent)"
-      @dragend="emit('dragEnd')"
       @dragover="(e) => emit('dragOver', employee, e as DragEvent)"
       @dragleave="emit('dragLeave')"
       @drop="(e) => emit('drop', employee, e as DragEvent)"
     >
       <div class="hidden md:flex items-center gap-3 p-4">
         <div
-          class="shrink-0 w-6 h-6 flex items-center justify-center text-gray-400"
-          title="Drag handle"
+          draggable="true"
+          class="shrink-0 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-brand-green transition-colors cursor-grab active:cursor-grabbing"
+          title="Drag to move"
+          @dragstart="(e) => emit('dragStart', employee, e as DragEvent)"
+          @dragend="emit('dragEnd')"
         >
           <Bars3Icon class="w-5 h-5" />
         </div>
 
-        <!-- Expand/Collapse Button -->
         <button
           v-if="hasSubordinates"
-          draggable="false"
           class="shrink-0 w-6 h-6 text-gray-400 hover:text-brand-green transition-colors cursor-pointer"
           @click.stop="handleToggleExpand"
           @mousedown.stop
@@ -168,9 +164,7 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
         </button>
         <div v-else class="w-6 shrink-0"></div>
 
-        <!-- Avatar -->
         <div
-          draggable="false"
           class="shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm overflow-hidden"
           :class="[
             !hasValidImage ? (level === 0 ? 'bg-brand-green' : 'bg-blue-500') : 'bg-gray-100',
@@ -199,20 +193,19 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
           <span v-else>{{ getInitials(employee.name) }}</span>
         </div>
 
-        <!-- Employee Info -->
         <div
-          draggable="false"
           class="flex-1 min-w-0"
           :class="hasSubordinates ? 'cursor-pointer' : ''"
           @click="hasSubordinates ? handleToggleExpand() : undefined"
         >
           <div class="font-semibold text-gray-900 truncate">{{ employee.name }}</div>
           <div class="text-sm text-gray-600 truncate">{{ employee.title }}</div>
+          <div v-if="employee.timezone" class="text-xs text-gray-500 mt-0.5 truncate">
+            {{ formatTimezone(employee.timezone) }}
+          </div>
         </div>
 
-        <!-- Level Badge -->
         <div
-          draggable="false"
           class="shrink-0 px-2 py-1 rounded-full text-xs font-semibold"
           :class="
             level === 0
@@ -231,19 +224,15 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
           {{ getLevelLabel(level) }}
         </div>
 
-        <!-- Subordinate Count Badge -->
         <div
           v-if="hasSubordinates"
-          draggable="false"
           class="shrink-0 px-3 py-1 bg-brand-green/10 text-brand-green rounded-full text-sm font-semibold"
         >
           {{ subordinates.length }} {{ subordinates.length === 1 ? 'report' : 'reports' }}
         </div>
 
-        <!-- Action Buttons -->
         <div class="shrink-0 flex gap-1">
           <button
-            draggable="false"
             @click.stop="emit('edit', employee)"
             @mousedown.stop
             class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
@@ -252,7 +241,6 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
             <PencilIcon class="w-4 h-4" />
           </button>
           <button
-            draggable="false"
             @click.stop="emit('addSubordinate', employee)"
             @mousedown.stop
             class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
@@ -262,7 +250,6 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
           </button>
           <button
             v-if="!hasSubordinates"
-            draggable="false"
             @click.stop="emit('delete', employee)"
             @mousedown.stop
             class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -272,7 +259,6 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
           </button>
           <div
             v-else
-            draggable="false"
             class="p-2 text-gray-300 cursor-not-allowed rounded-lg relative group/delete"
             @click.stop
             @mousedown.stop
@@ -294,17 +280,19 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
         </div>
       </div>
 
-      <!-- Mobile Layout -->
       <div class="md:hidden p-3">
         <div class="flex items-start gap-3">
-          <!-- Left: Drag Handle + Expand/Collapse -->
           <div class="flex flex-col items-center gap-2 pt-1">
-            <div class="w-5 h-5 flex items-center justify-center text-gray-400">
+            <div
+              draggable="true"
+              class="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-brand-green transition-colors cursor-grab active:cursor-grabbing"
+              @dragstart="(e) => emit('dragStart', employee, e as DragEvent)"
+              @dragend="emit('dragEnd')"
+            >
               <Bars3Icon class="w-4 h-4" />
             </div>
             <button
               v-if="hasSubordinates"
-              draggable="false"
               class="w-5 h-5 text-gray-400 hover:text-brand-green transition-colors"
               @click.stop="handleToggleExpand"
               @mousedown.stop
@@ -314,12 +302,9 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
             </button>
           </div>
 
-          <!-- Center: Avatar + Info -->
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-3 mb-2">
-              <!-- Avatar -->
               <div
-                draggable="false"
                 class="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs overflow-hidden"
                 :class="[
                   !hasValidImage ? (level === 0 ? 'bg-brand-green' : 'bg-blue-500') : 'bg-gray-100',
@@ -349,19 +334,19 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
                 <span v-else>{{ getInitials(employee.name) }}</span>
               </div>
 
-              <!-- Name + Title -->
               <div
-                draggable="false"
                 class="flex-1 min-w-0"
                 :class="hasSubordinates ? 'cursor-pointer' : ''"
                 @click="hasSubordinates ? handleToggleExpand() : undefined"
               >
                 <div class="font-semibold text-gray-900 text-sm truncate">{{ employee.name }}</div>
                 <div class="text-xs text-gray-600 truncate">{{ employee.title }}</div>
+                <div v-if="employee.timezone" class="text-[10px] text-gray-500 mt-0.5 truncate">
+                  {{ formatTimezone(employee.timezone) }}
+                </div>
               </div>
             </div>
 
-            <!-- Badges Row -->
             <div class="flex items-center gap-2 flex-wrap">
               <div
                 class="px-2 py-0.5 rounded-full text-xs font-semibold"
@@ -390,10 +375,8 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
             </div>
           </div>
 
-          <!-- Right: Action Buttons -->
           <div class="flex flex-col gap-1 pt-1">
             <button
-              draggable="false"
               @click.stop="emit('edit', employee)"
               @mousedown.stop
               class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
@@ -402,7 +385,6 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
               <PencilIcon class="w-4 h-4" />
             </button>
             <button
-              draggable="false"
               @click.stop="emit('addSubordinate', employee)"
               @mousedown.stop
               class="p-1.5 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
@@ -412,7 +394,6 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
             </button>
             <button
               v-if="!hasSubordinates"
-              draggable="false"
               @click.stop="emit('delete', employee)"
               @mousedown.stop
               class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -422,7 +403,6 @@ defineExpose({ expandPath, collapse, collapseAllChildren })
             </button>
             <div
               v-else
-              draggable="false"
               class="p-1.5 text-gray-300 cursor-not-allowed rounded-lg"
               @click.stop
               @mousedown.stop

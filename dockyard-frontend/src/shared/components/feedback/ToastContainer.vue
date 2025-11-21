@@ -1,51 +1,32 @@
 <script setup lang="ts">
-import {
-  CheckCircleIcon,
-  XCircleIcon,
-  ExclamationTriangleIcon,
-  InformationCircleIcon,
-  XMarkIcon,
-} from '@heroicons/vue/24/outline'
+import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { useToast } from '@/shared/composables/useToast'
 
 const { toasts, remove } = useToast()
 
-const getIcon = (type: string) => {
-  switch (type) {
-    case 'success':
-      return CheckCircleIcon
-    case 'error':
-      return XCircleIcon
-    case 'warning':
-      return ExclamationTriangleIcon
-    default:
-      return InformationCircleIcon
-  }
-}
-
 const getColors = (type: string) => {
   switch (type) {
     case 'success':
-      return 'bg-green-50 border-green-200 text-green-800'
+      return 'bg-green-50 border-green-400 text-green-800'
     case 'error':
-      return 'bg-red-50 border-red-200 text-red-800'
+      return 'bg-red-50 border-red-400 text-red-800'
     case 'warning':
-      return 'bg-yellow-50 border-yellow-200 text-yellow-800'
+      return 'bg-yellow-50 border-yellow-400 text-yellow-800'
     default:
-      return 'bg-blue-50 border-blue-200 text-blue-800'
+      return 'bg-blue-50 border-blue-400 text-blue-800'
   }
 }
 
-const getIconColor = (type: string) => {
+const getCloseButtonColor = (type: string) => {
   switch (type) {
     case 'success':
-      return 'text-green-600'
+      return 'hover:bg-green-100 text-green-700'
     case 'error':
-      return 'text-red-600'
+      return 'hover:bg-red-100 text-red-700'
     case 'warning':
-      return 'text-yellow-600'
+      return 'hover:bg-yellow-100 text-yellow-700'
     default:
-      return 'text-blue-600'
+      return 'hover:bg-blue-100 text-blue-700'
   }
 }
 </script>
@@ -63,20 +44,16 @@ const getIconColor = (type: string) => {
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        class="pointer-events-auto flex items-start gap-3 min-w-[320px] max-w-[420px] p-4 rounded-xl border-2 shadow-lg backdrop-blur-sm"
+        class="pointer-events-auto flex items-center justify-between gap-4 min-w-[320px] max-w-[420px] px-5 py-3.5 rounded-lg border"
         :class="getColors(toast.type)"
       >
-        <component
-          :is="getIcon(toast.type)"
-          class="w-6 h-6 shrink-0"
-          :class="getIconColor(toast.type)"
-        />
-        <p class="flex-1 text-sm font-medium leading-relaxed">{{ toast.message }}</p>
+        <p class="flex-1 text-sm font-semibold leading-relaxed">{{ toast.message }}</p>
         <button
           @click="remove(toast.id)"
-          class="shrink-0 w-5 h-5 rounded-lg hover:bg-black/5 transition-colors flex items-center justify-center"
+          class="shrink-0 w-6 h-6 rounded-lg transition-colors flex items-center justify-center cursor-pointer"
+          :class="getCloseButtonColor(toast.type)"
         >
-          <XMarkIcon class="w-4 h-4" />
+          <XMarkIcon class="w-5 h-5" />
         </button>
       </div>
     </TransitionGroup>

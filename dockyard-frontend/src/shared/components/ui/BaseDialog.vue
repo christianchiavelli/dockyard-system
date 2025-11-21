@@ -86,25 +86,22 @@ onUnmounted(() => {
       class="bg-white rounded-2xl shadow-2xl w-full max-h-[90vh] overflow-hidden flex flex-col border-2 border-brand-green/20"
       :class="sizeClasses[size]"
     >
-      <!-- Header with Loadsmart theme -->
       <div
-        class="flex items-center justify-between px-4 md:px-6 py-4 md:py-5 bg-linear-to-r from-brand-dark to-brand-dark/95 border-b-2 border-brand-green"
+        class="flex items-center justify-between px-4 md:px-6 py-4 md:py-5 bg-brand-dark border-b border-brand-green/30"
       >
-        <h2 class="text-lg md:text-2xl font-bold text-white flex items-center gap-2 md:gap-3">
-          <span class="w-1 md:w-1.5 h-6 md:h-8 bg-brand-green rounded-full"></span>
+        <h2 class="text-lg md:text-2xl font-bold text-white">
           {{ title }}
         </h2>
         <button
           v-if="showCloseButton"
           @click="handleClose"
-          class="p-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+          class="p-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer"
           aria-label="Close dialog"
         >
-          <XMarkIcon class="w-6 h-6" />
+          <XMarkIcon class="w-5 h-5 md:w-6 md:h-6" />
         </button>
       </div>
 
-      <!-- Content -->
       <div class="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 bg-gray-50/50">
         <slot />
       </div>

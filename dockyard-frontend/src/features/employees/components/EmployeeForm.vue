@@ -10,6 +10,7 @@ import type {
 import { useEmployeeFormValidation } from '@/features/employees/composables/useEmployeeFormValidation'
 import { useEmployeeImageUpload } from '@/features/employees/composables/useEmployeeImageUpload'
 import { useEmployeeManagerFilter } from '@/features/employees/composables/useEmployeeManagerFilter'
+import { useEmployeeFormat } from '@/features/employees/composables/useEmployeeFormat'
 
 interface Props {
   employee?: Employee
@@ -42,6 +43,8 @@ const employeeRef = toRef(props, 'employee')
 
 // Composables - each with a specific responsibility
 const { errors, validate, clearError } = useEmployeeFormValidation()
+
+const { formatTimezone } = useEmployeeFormat()
 
 const {
   imagePreview,
@@ -164,7 +167,7 @@ const commonTimezones = [
 const timezoneOptions = computed(() =>
   commonTimezones.map((tz) => ({
     value: tz,
-    label: tz,
+    label: formatTimezone(tz),
   })),
 )
 </script>

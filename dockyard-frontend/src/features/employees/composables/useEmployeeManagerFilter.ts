@@ -41,7 +41,6 @@ export function useEmployeeManagerFilter(
   ])
 
   return {
-    availableManagers,
     managerOptions,
   }
 }

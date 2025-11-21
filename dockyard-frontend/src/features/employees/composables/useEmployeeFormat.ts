@@ -4,7 +4,28 @@
  * Responsabilidades:
  * - Gerar iniciais a partir do nome
  * - Gerar label do tier/nível
+ * - Formatar timezone de forma legível
  */
+
+interface TimezoneInfo {
+  label: string
+  offset: string
+}
+
+const timezoneMap: Record<string, TimezoneInfo> = {
+  'America/Chicago': { label: 'Chicago', offset: 'UTC-6' },
+  'America/Los_Angeles': { label: 'Los Angeles', offset: 'UTC-8' },
+  'America/New_York': { label: 'New York', offset: 'UTC-5' },
+  'America/Phoenix': { label: 'Phoenix', offset: 'UTC-7' },
+  'America/Sao_Paulo': { label: 'São Paulo', offset: 'UTC-3' },
+  'Asia/Singapore': { label: 'Singapore', offset: 'UTC+8' },
+  'Asia/Tokyo': { label: 'Tokyo', offset: 'UTC+9' },
+  'Australia/Sydney': { label: 'Sydney', offset: 'UTC+10' },
+  'Europe/Berlin': { label: 'Berlin', offset: 'UTC+1' },
+  'Europe/London': { label: 'London', offset: 'UTC+0' },
+  UTC: { label: 'UTC', offset: 'UTC+0' },
+}
+
 export function useEmployeeFormat() {
   /**
    * Gera iniciais a partir do nome completo
@@ -38,8 +59,23 @@ export function useEmployeeFormat() {
     return `Tier ${level + 1}`
   }
 
+  /**
+   * Formata timezone para exibição legível
+   * Exemplos:
+   * - "America/Sao_Paulo" -> "São Paulo (UTC-3)"
+   * - "Asia/Tokyo" -> "Tokyo (UTC+9)"
+   * - "Unknown/Timezone" -> "Unknown/Timezone"
+   */
+  const formatTimezone = (timezone: string): string => {
+    const info = timezoneMap[timezone]
+    if (!info) return timezone
+
+    return `${info.label} (${info.offset})`
+  }
+
   return {
     getInitials,
     getLevelLabel,
+    formatTimezone,
   }
 }
