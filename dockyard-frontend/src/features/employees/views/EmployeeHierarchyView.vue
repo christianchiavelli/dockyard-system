@@ -490,7 +490,7 @@ onMounted(async () => {
 
     <!-- Form Dialog (Create/Edit/Add Subordinate) -->
     <BaseDialog
-      :open="formDialog.isOpen.value"
+      v-model:open="formDialog.isOpen.value"
       :title="
         dialogMode === 'edit'
           ? 'Edit Employee'
@@ -499,7 +499,6 @@ onMounted(async () => {
             : 'Create Employee'
       "
       size="xl"
-      @close="closeFormDialog"
     >
       <!-- Error Display - NO TOPO -->
       <div
@@ -543,10 +542,9 @@ onMounted(async () => {
 
     <!-- Delete Confirmation Dialog -->
     <EmployeeDeleteDialog
-      :open="deleteDialog.isOpen.value"
+      v-model:open="deleteDialog.isOpen.value"
       :employee="selectedEmployee"
-      @confirm="handleDeleteConfirm"
-      @cancel="deleteDialog.close"
+      :on-confirm="handleDeleteConfirm"
     />
 
     <!-- Loading Overlay durante Drop -->

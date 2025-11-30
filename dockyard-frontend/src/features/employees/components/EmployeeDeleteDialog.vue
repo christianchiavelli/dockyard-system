@@ -4,30 +4,26 @@ import BaseDialog from '@/shared/components/ui/BaseDialog.vue'
 import type { Employee } from '@/features/employees/types/employee.types'
 
 interface Props {
-  open: boolean
   employee: Employee | null
+  onConfirm?: () => void | Promise<void>
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
-interface Emits {
-  (e: 'confirm'): void
-  (e: 'cancel'): void
-}
+const isOpen = defineModel<boolean>('open', { default: false })
 
-const emit = defineEmits<Emits>()
-
-const handleConfirm = () => {
-  emit('confirm')
+const handleConfirm = async () => {
+  await props.onConfirm?.()
+  isOpen.value = false
 }
 
 const handleCancel = () => {
-  emit('cancel')
+  isOpen.value = false
 }
 </script>
 
 <template>
-  <BaseDialog :open="open" title="Confirm Delete" size="md" @close="handleCancel">
+  <BaseDialog v-model:open="isOpen" title="Confirm Delete" size="md">
     <div class="space-y-5">
       <!-- Employee Info Card -->
       <div

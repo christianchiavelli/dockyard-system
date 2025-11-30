@@ -3,7 +3,6 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 
 interface Props {
-  open: boolean
   title: string
   size?: 'sm' | 'md' | 'lg' | 'xl'
   showCloseButton?: boolean
@@ -14,10 +13,7 @@ const props = withDefaults(defineProps<Props>(), {
   showCloseButton: true,
 })
 
-const emit = defineEmits<{
-  'update:open': [value: boolean]
-  close: []
-}>()
+const isOpen = defineModel<boolean>('open', { default: false })
 
 const dialogRef = ref<HTMLDialogElement | null>(null)
 
@@ -29,25 +25,21 @@ const sizeClasses = {
 }
 
 // Open/close dialog
-watch(
-  () => props.open,
-  (isOpen) => {
-    if (!dialogRef.value) return
+watch(isOpen, (open) => {
+  if (!dialogRef.value) return
 
-    if (isOpen) {
-      dialogRef.value.showModal()
-      document.body.style.overflow = 'hidden'
-    } else {
-      dialogRef.value.close()
-      document.body.style.overflow = ''
-    }
-  },
-)
+  if (open) {
+    dialogRef.value.showModal()
+    document.body.style.overflow = 'hidden'
+  } else {
+    dialogRef.value.close()
+    document.body.style.overflow = ''
+  }
+})
 
 // Handle close
 const handleClose = () => {
-  emit('update:open', false)
-  emit('close')
+  isOpen.value = false
 }
 
 // Handle backdrop click
@@ -84,16 +76,16 @@ onUnmounted(() => {
   <dialog ref="dialogRef" class="dialog-custom backdrop:bg-brand-dark/80 backdrop:backdrop-blur-md">
     <div
       class="bg-white rounded-2xl shadow-2xl w-full max-h-[90vh] overflow-hidden flex flex-col border-2 border-brand-green/20"
-      :class="sizeClasses[size]"
+      :class="sizeClasses[props.size]"
     >
       <div
         class="flex items-center justify-between px-4 md:px-6 py-4 md:py-5 bg-brand-dark border-b border-brand-green/30"
       >
         <h2 class="text-lg md:text-2xl font-bold text-white">
-          {{ title }}
+          {{ props.title }}
         </h2>
         <button
-          v-if="showCloseButton"
+          v-if="props.showCloseButton"
           @click="handleClose"
           class="p-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer"
           aria-label="Close dialog"
